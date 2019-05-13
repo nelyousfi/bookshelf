@@ -1,102 +1,69 @@
 import React from 'react'
-import {useAuth} from './auth-context'
-import {useUser} from './user-context'
-import * as listItemClient from '../utils/list-items-client'
+// 🐨 import the auth context to get the initial listItems
+// 🐨 import the user context to get the user
+// 🐨 import the list-items-client from '../utils/list-items-client'
 
-const ListItemStateContext = React.createContext()
-const ListItemDispatchContext = React.createContext()
+// 🐨 create two contexts here:
+// 1) ListItemStateContext
+// 2) ListItemDispatchContext
 
-function listReducer(listItems, action) {
-  switch (action.type) {
-    case 'add': {
-      return [...listItems, action.listItem]
-    }
-    case 'remove': {
-      return listItems.filter(li => li.id !== action.id)
-    }
-    case 'update': {
-      return listItems.map(li => {
-        if (li.id === action.listItem.id) {
-          return {...li, ...action.listItem}
-        }
-        return li
-      })
-    }
-    default: {
-      throw new Error(`Unhandled action type: ${action.type}`)
-    }
-  }
-}
+// 🐨 create your reducer here. I recommend treating the state as an array of
+// listItems. It can be your standard switch statement reducer with the
+// following types:
+// - add: concat the action.listItem to the listItems
+// - remove: filter out the listItem with the matching action.id
+// - update: find the list item that matches the action.listItem.id and merge that list item with action.listItem
+
+// 🦉 It's a good idea to add a `default` which throws an error indicating that
+// a dispatch was made with an incorrect type.
 
 function ListItemProvider({children}) {
-  const {data} = useAuth()
-  const [state, dispatch] = React.useReducer(listReducer, data.listItems)
-  return (
-    <ListItemStateContext.Provider value={state}>
-      <ListItemDispatchContext.Provider value={dispatch}>
-        {children}
-      </ListItemDispatchContext.Provider>
-    </ListItemStateContext.Provider>
-  )
+  // 🐨 get {data} from useAuth. This will be the bootstrapped data.
+
+  // 🐨 use React.useReducer here to get state and dispatch.
+  // you can initialize it with the initial value set to data.listItems
+
+  // 🐨 render both of your context providers. The values should be set to:
+  // ListItemStateContext: state
+  // ListItemDispatchContext: dispatch
+
+  // 💰 make sure to render the children prop!
+  return <div>context/list-item-context.js TODO</div>
 }
 
-function removeListItem(dispatch, id) {
-  return listItemClient.remove(id).then(data => {
-    dispatch({type: 'remove', id})
-    return data
-  })
-}
+// 🐨 create three utilities: `removeListItem`, `addListItem`, and `updateListItem`:
+// each will accept dispatch as the first argument and any other aguments it
+// needs to pass along to the corresponding listItemClient method
 
-function addListItem(dispatch, listItemData) {
-  return listItemClient.create(listItemData).then(data => {
-    dispatch({type: 'add', listItem: data.listItem})
-    return data
-  })
-}
+// 💰 here, I'll give you one of them so you know what I mean.
+// function updateListItem(dispatch, listItemId, updates) {
+//   return listItemClient.update(listItemId, updates).then(data => {
+//     dispatch({type: 'update', listItem: data.listItem})
+//     return data
+//   })
+// }
 
-function updateListItem(dispatch, listItemId, updates) {
-  return listItemClient.update(listItemId, updates).then(data => {
-    dispatch({type: 'update', listItem: data.listItem})
-    return data
-  })
-}
+// 🐨 create a custom hook for each of your contexts:
+// - useListItemDispatch
+// - useListItemState
 
-function useListItemDispatch() {
-  const context = React.useContext(ListItemDispatchContext)
-  if (context === undefined) {
-    throw new Error(
-      `useListItemDispatch must be used within a ListItemProvider`,
-    )
-  }
-  return context
-}
-
-function useListItemState() {
-  const context = React.useContext(ListItemStateContext)
-  if (context === undefined) {
-    throw new Error(`useListItemState must be used within a ListItemProvider`)
-  }
-  return context
-}
-
-function useSingleListItemState({bookId}) {
-  const listItems = useListItemState()
-  if (!listItems) {
-    throw new Error(`useListItemState must be used within a ListItemProvider`)
-  }
-  const user = useUser()
-  const listItem = listItems.find(
-    li => li.ownerId === user.id && li.bookId === bookId,
-  )
-  return listItem
-}
+// 🐨 several of the pages need the listItem for a specific bookId, so let's
+// make another custom hook for that called `useSingleListItemState` and have
+// it accept the `bookId`
+// 💰 This one will need to use the `useListItemState` and `useUser`
+// then you can find the right list item with this:
+// return listItems.find(li => li.ownerId === user.id && li.bookId === bookId)
+// isnt' composition the best!?
 
 export {
   ListItemProvider,
-  useListItemDispatch,
-  useListItemState,
-  useSingleListItemState,
-  removeListItem,
-  addListItem,
-  updateListItem,
+  // useListItemDispatch,
+  // useListItemState,
+  // useSingleListItemState,
+  // removeListItem,
+  // addListItem,
+  // updateListItem,
 }
+
+// just in case you wanna test the finished version out...
+// export * from './list-item-context.finished'

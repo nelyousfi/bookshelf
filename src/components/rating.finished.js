@@ -4,17 +4,12 @@ import {jsx} from '@emotion/core'
 import React from 'react'
 import {useAsync} from 'react-async'
 import {FaStar} from 'react-icons/fa'
-// 🐨 get useListItemDispatch and the updateListItem utility from ..context/list-item-context
+import {useListItemDispatch, updateListItem} from '../context/list-item-context'
 import * as colors from '../styles/colors'
 
-// 🐨 make this function call `updateListItem` with the proper arguments.
-const updateRating = () => {}
-// 💰 this one's a bit tricky because the first argument is actually an array
-// of the arguments that `run` is called with below, so I'm going to give it to
-// you for free!! 🤑
-// function updateRating([index], {dispatch, listItem}) {
-//   return updateListItem(dispatch, listItem.id, {rating: index + 1})
-// }
+function updateRating([index], {dispatch, listItem}) {
+  return updateListItem(dispatch, listItem.id, {rating: index + 1})
+}
 
 function Rating({listItem}) {
   const {rating} = listItem
@@ -25,10 +20,7 @@ function Rating({listItem}) {
     setOrangeIndex(listItem.rating - 1)
   }, [listItem.rating])
 
-  // 🐨 switch this to useListItemDispatch
-  // 🦉 notice that it's passed to `useAsync` which will call `updateRating`
-  // with the dispatch and listItem which `run` is called with the `index`.
-  const dispatch = () => {}
+  const dispatch = useListItemDispatch()
   const {isRejected, isPending, error, run} = useAsync({
     deferFn: updateRating,
     dispatch,

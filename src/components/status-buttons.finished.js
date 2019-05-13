@@ -11,10 +11,14 @@ import {
 import {FaTimesCircle} from 'react-icons/fa'
 import Tooltip from '@reach/tooltip'
 import * as colors from '../styles/colors'
-// 🐨 you'll need useUser from '../context/user-context'
-// 🐨 you will need the following methods from ../context/list-item-context:
-//   useListItemDispatch, useSingleListItemState, removeListItem,
-//   updateListItem, and addListItem
+import {useUser} from '../context/user-context'
+import {
+  useListItemDispatch,
+  useSingleListItemState,
+  removeListItem,
+  updateListItem,
+  addListItem,
+} from '../context/list-item-context'
 import useCallbackStatus from '../utils/use-callback-status'
 import {CircleButton, Spinner} from './lib'
 
@@ -40,29 +44,26 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
 }
 
 function StatusButtons({book}) {
-  // 🐨 get the user from useUser
-  // 🐨 get `dispatch` from useListItemDispatch
-  // 🐨 get this from useSingleListItemState
-  const listItem = null
+  const user = useUser()
+  const dispatch = useListItemDispatch()
+  const listItem = useSingleListItemState({
+    bookId: book.id,
+  })
 
-  // 🦉 for each of these, make sure to return the call to the utility
-  // it's important for the `useCallbackStatus` hook in TooltipButton so it
-  // shows a spinner/error message properly.
   function handleRemoveClick() {
-    // 🐨 return a call to removeListItem
+    return removeListItem(dispatch, listItem.id)
   }
 
   function handleMarkAsReadClick() {
-    // 💰 here, I'll give you this one so you get an idea of what we need to do.
-    // return updateListItem(dispatch, listItem.id, {finishDate: Date.now()})
+    return updateListItem(dispatch, listItem.id, {finishDate: Date.now()})
   }
 
   function handleAddClick() {
-    // 🐨 return a call to addListItem
+    return addListItem(dispatch, {ownerId: user.id, bookId: book.id})
   }
 
   function handleMarkAsUnreadClick() {
-    // 🐨 return a call to updateListItem
+    return updateListItem(dispatch, listItem.id, {finishDate: null})
   }
 
   return (

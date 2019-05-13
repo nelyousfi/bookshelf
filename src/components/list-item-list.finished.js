@@ -1,13 +1,12 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core'
 
-// 🐨 get useListItemState from '../context/list-item-context'
+import {useListItemState} from '../context/list-item-context'
 import {BookListUL} from './lib'
 import BookRow from './book-row'
 
 function ListItemList({filterListItems, noListItems, noFilteredListItems}) {
-  // 🐨 get the listItems from useListItemState
-  const listItems = []
+  const listItems = useListItemState()
   const filteredListItems = listItems.filter(filterListItems)
 
   if (!listItems.length) {

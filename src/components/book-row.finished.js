@@ -4,14 +4,15 @@ import {jsx} from '@emotion/core'
 import {Link} from '@reach/router'
 import * as mq from '../styles/media-queries'
 import * as colors from '../styles/colors'
-// 🐨 grab useSingleListItemState from ../context/list-item-context
+import {useSingleListItemState} from '../context/list-item-context'
 import StatusButtons from './status-buttons'
 import Rating from './rating'
 
 function BookRow({book}) {
   const {title, author, coverImageUrl} = book
-  // 🐨 use your custom useSingleListItemState to get the list item for this book.
-  const listItem = null
+  const listItem = useSingleListItemState({
+    bookId: book.id,
+  })
 
   return (
     <div
