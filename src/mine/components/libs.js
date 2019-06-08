@@ -1,18 +1,18 @@
 /** @jsx jsx */
-import { jsx, keyframes } from '@emotion/core';
-import styled from '@emotion/styled';
-import { FaSpinner } from 'react-icons/fa';
-import * as colors from '../styles/colors';
+import {jsx, keyframes} from '@emotion/core'
+import styled from '@emotion/styled'
+import {FaSpinner} from 'react-icons/fa'
+import * as colors from '../styles/colors'
 
 const spin = keyframes({
-  '0%': { transform: 'rotate(0deg)' },
-  '100%': { transform: 'rotate(360deg)' },
+  '0%': {transform: 'rotate(0deg)'},
+  '100%': {transform: 'rotate(360deg)'},
 })
 
 export function Spinner(props) {
   return (
     <FaSpinner
-      css={{ animation: `${spin} 1s linear infinite` }}
+      css={{animation: `${spin} 1s linear infinite`}}
       aria-label="loading"
       {...props}
     />
@@ -32,11 +32,11 @@ export const CircleButton = styled.button({
   color: colors.text,
   border: `1px solid ${colors.gray10}`,
   cursor: 'pointer',
-});
+})
 
 export function FullPageSpinner() {
   return (
-    <div css={{ marginTop: '3em', fontSize: '4em' }}>
+    <div css={{marginTop: '3em', fontSize: '4em'}}>
       <Spinner />
     </div>
   )
@@ -57,7 +57,7 @@ export const Button = styled.button(
     border: '0',
     lineHeight: '1',
   },
-  ({ variant = 'primary' }) => buttonVariants[variant],
+  ({variant = 'primary'}) => buttonVariants[variant],
 )
 
 const buttonVariants = {
@@ -70,3 +70,8 @@ const buttonVariants = {
     color: colors.text,
   },
 }
+
+export const FormGroup = styled.div({
+  display: 'flex',
+  flexDirection: 'column',
+})

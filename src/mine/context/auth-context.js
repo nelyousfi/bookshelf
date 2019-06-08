@@ -1,14 +1,18 @@
-import React from 'react';
-import { useAsync } from 'react-async';
-import { FullPageSpinner } from '../../components/lib';
-import { bootstrapAppData } from '../../utils/bootstrap';
+/** @jsx jsx */
+import {jsx} from '@emotion/core'
 
-const AuthContext = React.createContext();
+import React from 'react'
+import {useAsync} from 'react-async'
+import {FullPageSpinner} from '../../components/lib'
+import {bootstrapAppData} from '../../utils/bootstrap'
+import * as authClient from '../../utils/auth-client'
+
+const AuthContext = React.createContext()
 
 function AuthProvider(props) {
-  const [firstAttemptFinished, setFirstAttemptFinished] = React.useState(false);
+  const [firstAttemptFinished, setFirstAttemptFinished] = React.useState(false)
   const {
-    data = { user: null, listItems: [] },
+    data = {user: null, listItems: []},
     error,
     isRejected,
     isPending,
@@ -16,13 +20,13 @@ function AuthProvider(props) {
     reload,
   } = useAsync({
     promiseFn: bootstrapAppData,
-  });
+  })
 
   React.useLayoutEffect(() => {
     if (isSettled) {
-      setFirstAttemptFinished(true);
+      setFirstAttemptFinished(true)
     }
-  }, [isSettled]);
+  }, [isSettled])
 
   if (!firstAttemptFinished) {
     if (isPending) {
@@ -30,30 +34,29 @@ function AuthProvider(props) {
     }
     if (isRejected) {
       return (
-        <div css={{ color: 'red' }}>
+        <div css={{color: 'red'}}>
           <p>Uh oh... There's a problem. Try refreshing the app.</p>
           <pre>{error.message}</pre>
         </div>
-      );
+      )
     }
   }
 
-  const login = () => console.log('login');
-  const register = () => console.log('register');
-  const logout = () => console.log('logout');
+  const login = form => authClient.login(form).then(reload)
+  const register = form => authClient.register(form).then(reload)
+  const logout = () => authClient.logout().then(reload)
 
   return (
-    <AuthContext.Provider value={{ data, login, register, logout }} {...props} />
+    <AuthContext.Provider value={{data, login, register, logout}} {...props} />
   )
 }
 
 function useAuth() {
-  const authContext = React.useContext(AuthContext);
+  const authContext = React.useContext(AuthContext)
   if (authContext === undefined) {
-    throw new Error('useAuth should be used inside AuthContext');
+    throw new Error('useAuth should be used inside AuthContext')
   }
-  return authContext;
+  return authContext
 }
 
-export { AuthProvider, useAuth, };
-
+export {AuthProvider, useAuth}
